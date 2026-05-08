@@ -1,0 +1,17 @@
+
+# Tex-Output-Files
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.nav
+*.snm
+*.fdb_latexmk
+*.fls
+*.bbl
+*.blg
+
+
+llama2.c/
+tex/PAL_Zusammenfassung

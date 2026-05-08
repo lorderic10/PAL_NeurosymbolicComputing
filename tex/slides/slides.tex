@@ -1,0 +1,147 @@
+\documentclass{beamer}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{graphicx, amsmath, amsthm}
+\usepackage{dsfont}
+\usepackage[english]{babel}
+\usepackage{amssymb,marvosym}
+\usepackage{ulem}
+\usepackage{cancel}
+% Theme auswählen
+\usetheme{Madrid}
+
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\dmid}{\mid\mid} 
+\newcommand{\concat}[2]{#1 \cdot #2}
+\renewcommand{\angle}[1]{\left\langle #1 \right\rangle}
+
+% Pakete
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Titelinformationen
+\title{PAL: Program-aided Language Models}
+\author{Eric Peter}
+\institute{Universität Heidelberg}
+\date{\today}
+
+\begin{document}
+
+% Titelfolie
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% Inhaltsverzeichnis
+\begin{frame}{Contents}
+    \tableofcontents
+\end{frame}
+
+% Abschnitt 1
+\section{Introduction}
+
+\begin{frame}{Motivation}
+    \begin{block}{Je besser der Prompt, desto besser der Output}
+        Resultate verschiedener Prompting-Methoden zeigen:\\
+        Der LLM zu erklären, 
+        wie sie ihre Ergebnisse richtig herleiten soll,
+        spielt eine unüberschaubare Rolle für den generierten Output. 
+    \end{block}
+
+    % \pause 
+
+    \underline{Bisherige Methoden}:
+    \begin{itemize}
+        \item \textbf{Few-Shot-Prompting}
+        \item \textbf{Chain-Of-Thought-Prompting}
+    \end{itemize}
+
+    % \pause
+
+    \underline{Zielsetzung}:\\
+    In diesen Thema geht es um eine weitere Prompting-Methode,
+    die in Kombination mit bisherigen Methoden
+    eine neue \textit{state-of-the-art}-Benchmark setzt.\\
+
+    % \pause
+
+    Es geht um das \begin{center}
+        \large \textbf{PAL: Program-aided Language Models}
+    \end{center} 
+    
+\end{frame}
+
+\begin{frame}{Background: Few-Shot-Prompting}
+
+    \begin{block}{Beispiellösungen helfen!}
+        \begin{itemize}
+            \item Füttere die Maschine mit \(k\) beispielhaften Frage-Antwort-Paaren \(\set{(x_i,y_i)}_{i=1}^k\).
+            \item Gestalte die Demonstrationen in einem einheitlichen Format,
+            sodass die LLM das leicht das Muster erkennt, 
+            dem sie folgen soll.
+            \item Die Beispiele stehen im Kontext zur jeweiligen Aufgabe und zeigen, welche verallgemeinernden Fähigkeiten oder Kenntnisse nötig sind.
+        \end{itemize}
+    \end{block}
+
+    Wir konstruieren einen Prompt\[
+        p \equiv \angle{\concat{x_1}{y_1}} \dmid \angle{\concat{x_2}{y_2}} \dmid ... \dmid \angle{\concat{x_k}{y_k}},
+    \]wobei Frage \(x_i\) und Lösung \(y_i\) mit dem Zeichen '\(\cdot\)' 
+    und die Beispiele mit '\(\dmid\)' geeignet konkateniert werden.\\
+    Anschließend fügen wir die Testinstanz \(x_{test}\) hinzu 
+    und lassen die Maschine mit \(p \dmid x_{test}\) den Output \(y_{test}\) generieren.
+
+\end{frame}
+
+\begin{frame}{Background: Chain-Of-Thought-Prompting}
+    \begin{block}{Erweitere die Parameter des Few-Shot-Promptings}
+        Neben den bisherigen Parametern \(x_i\) und \(y_i\) 
+        wollen wir durch Einfügen geeigneter \(t_i\) der Maschine beibringen, \begin{itemize}
+            \item das Problem in weniger komplexe Teilprobleme zu teilen,
+            \item Teilprobleme einzeln zu lösen und auf Basis der Zwischenergebnisse weiterzuarbeiten
+            \item und diese Unterteilung im Output darzustellen.
+        \end{itemize}
+    \end{block}
+
+    Konkret erstellen wir \[
+        p \equiv \angle{\concat{\concat{x_1}{t_1}}{y_1}} \dmid \angle{\concat{\concat{x_2}{t_2}}{y_2}} \dmid ... \dmid \angle{\concat{\concat{x_k}{t_k}}{y_k}}
+    \]und lassen nun mit \(p \dmid x_{test}\) sowohl die Erklärung \(t_{test}\) als auch die Lösung \(y_{test}\) generieren.
+\end{frame}
+
+\begin{frame}{Zielsetzung}
+    Ziel dieser Seminararbeit ist es,
+    ein bestimmtes Thema zu analysieren und zu präsentieren.
+\end{frame}
+
+% Abschnitt 2
+\section{Hauptteil}
+
+\begin{frame}{Wichtige Ergebnisse}
+    \begin{block}{Kernaussage}
+        Hier steht eine wichtige Erkenntnis.
+    \end{block}
+
+    \pause
+
+    \begin{alertblock}{Achtung}
+        Hier kann ein kritischer Punkt hervorgehoben werden.
+    \end{alertblock}
+\end{frame}
+
+% Abschnitt 3
+\section{Fazit}
+
+\begin{frame}{Fazit}
+    \begin{enumerate}
+        \item Wichtigstes Ergebnis
+        \item Erkenntnisse
+        \item Ausblick
+    \end{enumerate}
+\end{frame}
+
+% Letzte Folie
+\begin{frame}
+    \centering
+    \Huge Vielen Dank!
+\end{frame}
+
+\end{document}
