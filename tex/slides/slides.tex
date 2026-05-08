@@ -1,7 +1,7 @@
 \documentclass{beamer}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
-\usepackage{graphicx, amsmath, amsthm}
+\usepackage{graphicx, amsmath, amsthm, xcolor}
 \usepackage{dsfont}
 \usepackage[english]{babel}
 \usepackage{amssymb,marvosym}
@@ -14,6 +14,7 @@
 \newcommand{\dmid}{\mid\mid} 
 \newcommand{\concat}[2]{#1 \cdot #2}
 \renewcommand{\angle}[1]{\left\langle #1 \right\rangle}
+\newcommand{\red}[1]{{\color{red}#1}}
 
 % Pakete
 \usepackage[utf8]{inputenc}
@@ -40,6 +41,8 @@
 % Abschnitt 1
 \section{Introduction}
 
+\subsection{Motivation}
+
 \begin{frame}{Motivation}
     \begin{block}{Je besser der Prompt, desto besser der Output}
         Resultate verschiedener Prompting-Methoden zeigen:\\
@@ -56,20 +59,22 @@
         \item \textbf{Chain-Of-Thought-Prompting}
     \end{itemize}
 
-    % \pause
+    \pause
 
     \underline{Zielsetzung}:\\
     In diesen Thema geht es um eine weitere Prompting-Methode,
     die in Kombination mit bisherigen Methoden
     eine neue \textit{state-of-the-art}-Benchmark setzt.\\
 
-    % \pause
+    \pause
 
     Es geht um das \begin{center}
         \large \textbf{PAL: Program-aided Language Models}
     \end{center} 
     
 \end{frame}
+
+\subsection{Background: Few-Shot-Prompting}
 
 \begin{frame}{Background: Few-Shot-Prompting}
 
@@ -83,6 +88,8 @@
         \end{itemize}
     \end{block}
 
+    \pause
+
     Wir konstruieren einen Prompt\[
         p \equiv \angle{\concat{x_1}{y_1}} \dmid \angle{\concat{x_2}{y_2}} \dmid ... \dmid \angle{\concat{x_k}{y_k}},
     \]wobei Frage \(x_i\) und Lösung \(y_i\) mit dem Zeichen '\(\cdot\)' 
@@ -91,6 +98,8 @@
     und lassen die Maschine mit \(p \dmid x_{test}\) den Output \(y_{test}\) generieren.
 
 \end{frame}
+
+\subsection{Background: Chain-Of-Thought-Prompting}
 
 \begin{frame}{Background: Chain-Of-Thought-Prompting}
     \begin{block}{Erweitere die Parameter des Few-Shot-Promptings}
@@ -102,35 +111,45 @@
         \end{itemize}
     \end{block}
 
+    \pause
+
     Konkret erstellen wir \[
         p \equiv \angle{\concat{\concat{x_1}{t_1}}{y_1}} \dmid \angle{\concat{\concat{x_2}{t_2}}{y_2}} \dmid ... \dmid \angle{\concat{\concat{x_k}{t_k}}{y_k}}
     \]und lassen nun mit \(p \dmid x_{test}\) sowohl die Erklärung \(t_{test}\) als auch die Lösung \(y_{test}\) generieren.
 \end{frame}
 
-\begin{frame}{Zielsetzung}
-    Ziel dieser Seminararbeit ist es,
-    ein bestimmtes Thema zu analysieren und zu präsentieren.
+\subsection{Bisherige Probleme}
+
+\begin{frame}{Bisherige Probleme}
+    \small
+    \begin{itemize}
+        \item[\red{TODO}] Fasse hier kurz die Kombination der Ideen des \textbf{Few-Shot-Promptings} und \textbf{Chain-Of-Thought-Promptings} zusammen.
+        \item[\red{TODO}] Geh auf die Vorteile ein, vllt mit ein paar Daten.
+        \item[\red{TODO}] Geh auf die Grenzen ein. \begin{itemize}
+            \item Reasoning und Teilproblemunterteilung meist richtig, Zwischenergebnisse sind aber falsch
+            \item Rechnen basiert auf 'Intuition' der LLM, keiner richtigen arithmetischen Logik
+            \item ...
+        \end{itemize}
+        \item[\red{TODO}] Gib einen Hint für den Lösungsansatz (\textbf{PAL})
+    \end{itemize}
 \end{frame}
 
 % Abschnitt 2
-\section{Hauptteil}
+\section{PAL: Program-aided Language Models}
 
-\begin{frame}{Wichtige Ergebnisse}
-    \begin{block}{Kernaussage}
-        Hier steht eine wichtige Erkenntnis.
-    \end{block}
-
-    \pause
-
-    \begin{alertblock}{Achtung}
-        Hier kann ein kritischer Punkt hervorgehoben werden.
-    \end{alertblock}
+\begin{frame}{\red{TODO}: Unterteilung des Hauptabschnitts}
+    \small
+    \begin{itemize}
+        \item[\red{TODO}] Erkläre anschaulich die \textbf{PAL}-Methode.
+        \item[\red{TODO}] Zeige Daten.
+        \item[\red{TODO}] Geh auf die Benchmarks ein
+    \end{itemize}
 \end{frame}
 
 % Abschnitt 3
 \section{Fazit}
 
-\begin{frame}{Fazit}
+\begin{frame}{\red{TODO}: Unterteilung des Fazits}
     \begin{enumerate}
         \item Wichtigstes Ergebnis
         \item Erkenntnisse
