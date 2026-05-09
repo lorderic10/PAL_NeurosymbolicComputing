@@ -1,0 +1,24 @@
+\frametitle{Example: symbolic reasoning with \PAL {}}
+\begin{block}{Task type: colored objects}
+The model must track object order and attributes, then answer a relational question.
+\end{block}
+\vspace{0.1cm}
+\begin{lstlisting}[style=pythonstyle]
+objects = [
+    ('paperclip', 'purple'),
+    ('stress ball', 'pink'),
+    ('keychain', 'brown'),
+    ('scrunchiephone charger', 'green')
+]
+
+stress_ball_idx = None
+for i, obj in enumerate(objects):
+    if obj[0] == 'stress ball':
+        stress_ball_idx = i
+        break
+
+direct_right = objects[stress_ball_idx + 1]
+answer = direct_right[1]
+\end{lstlisting}
+\vspace{-0.1cm}
+\source{Adapted from PAL paper, Figure 4.}

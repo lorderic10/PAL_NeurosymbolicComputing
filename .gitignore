@@ -12,6 +12,9 @@
 *.bbl
 *.blg
 
+.env
 
+.vscode
 llama2.c/
 tex/PAL_Zusammenfassung
+tex/chatti
