@@ -5,9 +5,10 @@ Participant: Eric Peter
 ## Description
 This repo serves as documentation for my progress in this seminar's topic.
 Here is where I
-- collect relevant researches and paper ('CoT_Paper.pdf', 'PAL_Paper.pdf)
-- maintain my presentation slides (folder 'tex/slides')
-- do some tests with the oficial PAL repository reproducing some results (folder 'pal')
+### - collect relevant researches and paper (folder 'important_papers')
+### - note organizational issues (folder 'orga')
+### - maintain my presentation slides (folder 'tex/slides')
+### - do some tests with the oficial PAL repository reproducing some results (submodule 'pal', 'pal_test.py)
 
 This is still the preliminary work
 
