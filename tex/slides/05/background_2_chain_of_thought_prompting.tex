@@ -1,0 +1,21 @@
+\begin{frame}{Background 2: chain-of-thought prompting}
+\begin{block}{Extension of few-shot prompting}
+Chain-of-thought adds intermediate natural-language reasoning steps $t_i$ to each demonstration.
+\end{block}
+\[
+  p = \langle x_1 \cdot t_1 \cdot y_1 \rangle \concat \langle x_2 \cdot t_2 \cdot y_2 \rangle \concat \dots \concat \langle x_k \cdot t_k \cdot y_k \rangle
+\]
+\[
+  p \concat x_{\text{test}} \quad \Rightarrow \quad t_{\text{test}} \cdot y_{\text{test}}
+\]
+\vspace{0.15cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.48\textwidth}
+\textbf{Strength:} encourages decomposition into substeps.
+\end{column}
+\begin{column}{0.48\textwidth}
+\textbf{Weakness:} the LLM still has to execute every substep itself.
+\end{column}
+\end{columns}
+\source{PAL paper, Section 2 and Figure 1.}
+\end{frame}

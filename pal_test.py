@@ -1,7 +1,7 @@
 import pal.pal
 from pal.pal.prompt import math_prompts
 
-interface = pal.interface.ProgramInterface(
+interface = pal.pal.interface.ProgramInterface(
   model='gpt-5.4',
   stop='\n\n\n', # stop generation str for Codex API
   get_answer_expr='solution()' # python expression evaluated after generated code to obtain answer 

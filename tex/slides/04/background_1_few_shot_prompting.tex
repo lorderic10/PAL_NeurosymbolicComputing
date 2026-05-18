@@ -1,0 +1,17 @@
+\begin{frame}{Background 1: few-shot prompting}
+\begin{block}{Definition}
+Few-shot prompting gives the LLM a small number of demonstrations directly in the input prompt. The model is not fine-tuned; it completes the new test instance by following the demonstrated pattern.
+\end{block}
+\vspace{0.2cm}
+\[
+  p = \langle x_1 \cdot y_1 \rangle \concat \langle x_2 \cdot y_2 \rangle \concat \dots \concat \langle x_k \cdot y_k \rangle
+\]
+\[
+  \text{Inference input: } p \concat x_{\text{test}} \quad \Rightarrow \quad y_{\text{test}}
+\]
+\vspace{0.2cm}
+\begin{exampleblock}{Intuition}
+The prompt teaches the model the expected format and the task behavior from examples instead of changing model parameters.
+\end{exampleblock}
+\source{PAL paper, Section 2.}
+\end{frame}

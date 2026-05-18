@@ -1,32 +1,38 @@
-\documentclass[aspectratio=169,10pt]{beamer}
+\documentclass[aspectratio=1610,xcolor=dvipsnames,t]{beamer}
 
 % ---------- Packages ----------
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[english]{babel}
 \usepackage{lmodern}
-\usepackage{amsmath,amssymb}
+\usepackage{amsmath,amssymb,dsfont}
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{graphicx}
-\usepackage{xcolor}
+\usepackage[dvipsnames]{xcolor}
 \usepackage{wrapfig}
 \usepackage{listings}
 \usepackage{tikz}
+\usepackage{fancybox}
+\usepackage{color}
+\usepackage{beamerthemesplit}
+\usepackage{multirow}
+\usepackage{soul}
 \usetikzlibrary{arrows.meta,positioning,fit,shapes.geometric}
 
 % ---------- Theme ----------
-\usetheme{Madrid}
-\usecolortheme{default}
-\setbeamertemplate{navigation symbols}{}
-\setbeamertemplate{caption}[numbered]
-\setbeamercolor{block title}{fg=white,bg=blue!60!black}
-\setbeamercolor{block body}{bg=blue!4!white}
+\usetheme[compress]{Heidelberg}
+\definecolor{unirot}{rgb}{0.5976525,0,0}
+\usecolortheme[named=unirot]{structure}
+% \setbeamertemplate{navigation symbols}{}
+% \setbeamertemplate{caption}[numbered]
+% \setbeamercolor{block title}{fg=white,bg=unirot!60!black}
+% \setbeamercolor{block body}{bg=unirot!4!white}
 
 % ---------- Convenience ----------
-\newcommand{\PAL}{\textsc{PAL}}
-\newcommand{\CoT}{\textsc{CoT}}
-\newcommand{\Direct}{\textsc{Direct}}
+\newcommand{\PAL}{{\normalfont\rmfamily\scshape PAL}}
+\newcommand{\CoT}{{\normalfont\rmfamily\scshape CoT}}
+\newcommand{\Direct}{{\normalfont\rmfamily\scshape Direct}}
 \newcommand{\concat}{\mathbin{\|}}
 \newcommand{\source}[1]{\vspace{0.15cm}{\scriptsize\color{gray}Source: #1}}
 
@@ -46,502 +52,36 @@
 
 % ---------- Title ----------
 \title[Program-aided Language Models]{PAL: Program-aided Language Models}
-\subtitle{Preliminary structure for a 30-minute seminar presentation}
+\subtitle{How to connect the weaknesses of LLMs in performing algorithmic executions}
 \author{Eric Peter}
 \institute{Heidelberg University}
-\date{Preliminary discussion}
+\date{21. May 2026}
 
 \begin{document}
 
 % =========================================================
-\begin{frame}
-  \titlepage
-\end{frame}
 
-% =========================================================
-\begin{frame}{Talk structure and timing \hfill \small 30 min total}
-\begin{table}
-\small
-\begin{tabular}{@{}p{0.32\textwidth}p{0.50\textwidth}p{0.10\textwidth}@{}}
-\toprule
-\textbf{Part} & \textbf{Goal} & \textbf{Time} \\
-\midrule
-1. Motivation and background & Why reasoning with LLMs is hard; few-shot and chain-of-thought prompting & 5 min \\
-2. Core idea of \PAL{} & Explain how programs become intermediate reasoning steps and why the interpreter matters & 8 min \\
-3. Experimental setup & Tasks, baselines, models, and evaluation protocol & 5 min \\
-4. Results and analysis & Main quantitative results, robustness, ablations, and failure modes & 8 min \\
-5. Discussion and conclusion & Strengths, limitations, and seminar discussion questions & 4 min \\
-\bottomrule
-\end{tabular}
-\end{table}
-\vspace{0.2cm}
-\begin{block}{Main message}
-\PAL{} separates \textbf{understanding/decomposition} from \textbf{execution}: the LLM writes code-like reasoning steps, while Python performs the exact computation.
-\end{block}
-\end{frame}
-
-% =========================================================
-\section{Motivation and Background}
-
-\begin{frame}{Motivation: LLMs reason, but they also calculate unreliably}
-\begin{columns}[T,totalwidth=\textwidth]
-\begin{column}{0.54\textwidth}
-\begin{block}{Observation behind \PAL{}}
-Large language models can often translate a natural-language problem into useful intermediate steps, but may still make arithmetic or logical execution mistakes.
-\end{block}
-\vspace{0.15cm}
-\begin{itemize}
-  \item Few-shot prompting shows examples at test time.
-  \item Chain-of-thought prompting asks the model to write intermediate reasoning steps.
-  \item But in \CoT{}, the same model both \emph{plans} and \emph{executes} the solution.
-\end{itemize}
-\end{column}
-\begin{column}{0.42\textwidth}
-\begin{alertblock}{Problem}
-Even if the decomposition is plausible, the final answer can be wrong because the LLM performs calculations as text generation rather than exact computation.
-\end{alertblock}
-\vspace{0.1cm}
-\centering
-\begin{tikzpicture}[node distance=0.28cm, every node/.style={font=\scriptsize}]
-\node[draw,rounded corners,fill=blue!8,minimum width=3.6cm,align=center] (q) {Natural-language\ problem};
-\node[draw,rounded corners,fill=blue!8,below=of q,minimum width=3.6cm,align=center] (steps) {Reasoning steps};
-\node[draw,rounded corners,fill=red!10,below=of steps,minimum width=3.6cm,align=center] (calc) {LLM executes\ calculation};
-\node[draw,rounded corners,fill=red!10,below=of calc,minimum width=3.6cm,align=center] (ans) {Final answer};
-\draw[-{Latex}] (q) -- (steps);
-\draw[-{Latex}] (steps) -- (calc);
-\draw[-{Latex}] (calc) -- (ans);
-\end{tikzpicture}
-\end{column}
-\end{columns}
-\source{PAL paper, Abstract and Introduction.}
-\end{frame}
-
-% ---------------------------------------------------------
-\begin{frame}{Background 1: few-shot prompting}
-\begin{block}{Definition}
-Few-shot prompting gives the LLM a small number of demonstrations directly in the input prompt. The model is not fine-tuned; it completes the new test instance by following the demonstrated pattern.
-\end{block}
-\vspace{0.2cm}
-\[
-  p = \langle x_1 \cdot y_1 \rangle \concat \langle x_2 \cdot y_2 \rangle \concat \dots \concat \langle x_k \cdot y_k \rangle
-\]
-\[
-  \text{Inference input: } p \concat x_{\text{test}} \quad \Rightarrow \quad y_{\text{test}}
-\]
-\vspace{0.2cm}
-\begin{exampleblock}{Intuition}
-The prompt teaches the model the expected format and the task behavior from examples instead of changing model parameters.
-\end{exampleblock}
-\source{PAL paper, Section 2.}
-\end{frame}
-
-% ---------------------------------------------------------
-\begin{frame}{Background 2: chain-of-thought prompting}
-\begin{block}{Extension of few-shot prompting}
-Chain-of-thought adds intermediate natural-language reasoning steps $t_i$ to each demonstration.
-\end{block}
-\[
-  p = \langle x_1 \cdot t_1 \cdot y_1 \rangle \concat \langle x_2 \cdot t_2 \cdot y_2 \rangle \concat \dots \concat \langle x_k \cdot t_k \cdot y_k \rangle
-\]
-\[
-  p \concat x_{\text{test}} \quad \Rightarrow \quad t_{\text{test}} \cdot y_{\text{test}}
-\]
-\vspace{0.15cm}
-\begin{columns}[T,totalwidth=\textwidth]
-\begin{column}{0.48\textwidth}
-\textbf{Strength:} encourages decomposition into substeps.
-\end{column}
-\begin{column}{0.48\textwidth}
-\textbf{Weakness:} the LLM still has to execute every substep itself.
-\end{column}
-\end{columns}
-\source{PAL paper, Section 2 and Figure 1.}
-\end{frame}
-
-% ---------------------------------------------------------
-\begin{frame}[fragile]{Where chain-of-thought can fail}
-\begin{columns}[T,totalwidth=\textwidth]
-\begin{column}{0.48\textwidth}
-\begin{block}{\CoT{} style}
-\small
-``The bakery baked 200 loaves. It sold 93 in the morning and 39 in the afternoon. 93 + 39 = 132. 6 were returned. So 200 - 132 - 6 = 62.''
-\end{block}
-\vspace{0.1cm}
-\begin{alertblock}{Issue}
-The verbal reasoning can look convincing, but a sign or arithmetic mistake changes the result.
-\end{alertblock}
-\end{column}
-\begin{column}{0.48\textwidth}
-\begin{block}{Correct computation}
-\begin{lstlisting}[style=pythonstyle]
-loaves_baked = 200
-sold_morning = 93
-sold_afternoon = 39
-returned = 6
-answer = loaves_baked - sold_morning \
-         - sold_afternoon + returned
-# answer = 74
-\end{lstlisting}
-\end{block}
-\vspace{-0.1cm}
-\begin{exampleblock}{Transition to \PAL{}}
-Let the LLM write the computation, but let an interpreter run it.
-\end{exampleblock}
-\end{column}
-\end{columns}
-\source{Adapted from PAL paper, Figure 1.}
-\end{frame}
-
-% =========================================================
-\section{Program-aided Language Models}
-
-\begin{frame}{Core idea of \PAL{}}
-\begin{columns}[T,totalwidth=\textwidth]
-\begin{column}{0.50\textwidth}
-\begin{block}{What changes?}
-\PAL{} represents intermediate reasoning steps as a mixture of natural language and executable program statements.
-\end{block}
-\begin{itemize}
-  \item LLM: parse the problem and generate code.
-  \item Python interpreter: execute the generated program.
-  \item Final answer: obtained from the runtime result.
-\end{itemize}
-\end{column}
-\begin{column}{0.46\textwidth}
-\centering
-\begin{tikzpicture}[node distance=0.35cm, every node/.style={font=\scriptsize}]
-\node[draw,rounded corners,fill=blue!8,minimum width=4.2cm,align=center] (q) {Natural-language problem};
-\node[draw,rounded corners,fill=blue!8,below=of q,minimum width=4.2cm,align=center] (llm) {LLM generates programmatic steps};
-\node[draw,rounded corners,fill=green!12,below=of llm,minimum width=4.2cm,align=center] (py) {Python interpreter executes};
-\node[draw,rounded corners,fill=green!12,below=of py,minimum width=4.2cm,align=center] (a) {Answer};
-\draw[-{Latex}] (q) -- (llm);
-\draw[-{Latex}] (llm) -- (py);
-\draw[-{Latex}] (py) -- (a);
-\end{tikzpicture}
-\end{column}
-\end{columns}
-\vspace{0.2cm}
-\begin{alertblock}{Key conceptual shift}
-The model no longer has to be a reliable calculator; it has to be a reliable translator from language to executable reasoning.
-\end{alertblock}
-\source{PAL paper, Section 3.}
-\end{frame}
-
-% ---------------------------------------------------------
-\begin{frame}{Formal view of \PAL{} prompting}
-\begin{block}{Prompt format}
-In \PAL{}, each in-context example contains the question $x_i$ and a generated reasoning/program trace $t_i$, but the final answer does not need to be explicitly provided in the prompt because it will be obtained by execution.
-\end{block}
-\[
-  p = \langle x_1 \cdot t_1 \rangle \concat \langle x_2 \cdot t_2 \rangle \concat \dots \concat \langle x_k \cdot t_k \rangle
-\]
-\[
-  p \concat x_{\text{test}} \quad \Rightarrow \quad t_{\text{test}}
-  \quad \xrightarrow{\text{Python}} \quad y_{\text{test}}
-\]
-\vspace{0.15cm}
-\begin{exampleblock}{Important design choice}
-The paper stresses meaningful variable names, because they help the LLM ground code variables in the entities from the question.
-\end{exampleblock}
-\source{PAL paper, Section 3 and Section 6.}
-\end{frame}
-
-% ---------------------------------------------------------
-\begin{frame}[fragile]{Example: mathematical reasoning with \PAL{}}
-\begin{columns}[T,totalwidth=\textwidth]
-\begin{column}{0.46\textwidth}
-\begin{block}{Question}
-Olivia has \$23. She bought five bagels for \$3 each. How much money does she have left?
-\end{block}
-\vspace{0.15cm}
-\begin{itemize}
-  \item The LLM identifies quantities and operations.
-  \item The answer is produced by executing Python.
-\end{itemize}
-\end{column}
-\begin{column}{0.50\textwidth}
-\begin{lstlisting}[style=pythonstyle]
-money_initial = 23
-bagels = 5
-bagel_cost = 3
-money_spent = bagels * bagel_cost
-money_left = money_initial - money_spent
-answer = money_left
-\end{lstlisting}
-\end{column}
-\end{columns}
-\source{PAL paper, Figure 3.}
-\end{frame}
-
-% ---------------------------------------------------------
-\begin{frame}[fragile]{Example: symbolic reasoning with \PAL{}}
-\begin{block}{Task type: colored objects}
-The model must track object order and attributes, then answer a relational question.
-\end{block}
-\vspace{0.1cm}
-\begin{lstlisting}[style=pythonstyle]
-objects = [
-    ('paperclip', 'purple'),
-    ('stress ball', 'pink'),
-    ('keychain', 'brown'),
-    ('scrunchiephone charger', 'green')
-]
-
-stress_ball_idx = None
-for i, obj in enumerate(objects):
-    if obj[0] == 'stress ball':
-        stress_ball_idx = i
-        break
-
-direct_right = objects[stress_ball_idx + 1]
-answer = direct_right[1]
-\end{lstlisting}
-\vspace{-0.1cm}
-\source{Adapted from PAL paper, Figure 4.}
-\end{frame}
-
-% =========================================================
-\section{Experimental Setup}
-
-\begin{frame}{Experimental setup}
-\begin{columns}[T,totalwidth=\textwidth]
-\begin{column}{0.33\textwidth}
-\begin{block}{Task families}
-\begin{itemize}
-  \item Mathematical word problems
-  \item Symbolic reasoning
-  \item Algorithmic tasks
-\end{itemize}
-\end{block}
-\end{column}
-\begin{column}{0.31\textwidth}
-\begin{block}{Baselines}
-\begin{itemize}
-  \item \Direct{} prompting
-  \item \CoT{} prompting
-  \item \PAL{} prompting
-\end{itemize}
-\end{block}
-\end{column}
-\begin{column}{0.31\textwidth}
-\begin{block}{Main backend}
-\begin{itemize}
-  \item Codex / code-davinci-002
-  \item Greedy decoding, temperature 0
-  \item Accuracy / solve rate
-\end{itemize}
-\end{block}
-\end{column}
-\end{columns}
-\vspace{0.25cm}
-\begin{exampleblock}{Why this setup matters}
-The experiments test whether the gain comes from program-aided execution rather than simply from using a larger language model.
-\end{exampleblock}
-\source{PAL paper, Section 4.}
-\end{frame}
-
-% ---------------------------------------------------------
-\begin{frame}{Benchmarks used in the paper}
-\small
-\begin{table}
-\begin{tabular}{@{}p{0.27\textwidth}p{0.64\textwidth}@{}}
-\toprule
-\textbf{Category} & \textbf{Benchmarks / examples} \\
-\midrule
-Mathematical reasoning & GSM8K, GSM-HARD, SVAMP, ASDIV, SINGLEEQ, SINGLEOP, ADDSUB, MULTIARITH \\
-Symbolic reasoning & COLORED OBJECTS, PENGUINS, DATE from BIG-Bench Hard \\
-Algorithmic tasks & OBJECT COUNTING and REPEAT COPY \\
-\bottomrule
-\end{tabular}
-\end{table}
-\vspace{0.15cm}
-\begin{block}{Presentation focus}
-I will focus on GSM8K/GSM-HARD for arithmetic robustness, and on COLORED OBJECTS/OBJECT COUNTING for symbolic and algorithmic reasoning.
-\end{block}
-\source{PAL paper, Sections 4.1--4.3.}
-\end{frame}
-
-% =========================================================
-\section{Results and Analysis}
-
-\begin{frame}{Main math results: \PAL{} improves across datasets}
-\small
-\begin{table}
-\begin{tabular}{@{}lcccc@{}}
-\toprule
-\textbf{Method} & \textbf{GSM8K} & \textbf{GSM-HARD} & \textbf{SVAMP} & \textbf{MULTIARITH} \\
-\midrule
-\Direct{} Codex & 19.7 & 5.0 & 69.9 & 44.0 \\
-\CoT{} Codex & 65.6 & 23.1 & 74.8 & 95.9 \\
-\CoT{} PaLM-540B & 56.9 & -- & 79.0 & 94.7 \\
-\textbf{\PAL{} Codex} & \textbf{72.0} & \textbf{61.2} & \textbf{79.4} & \textbf{99.2} \\
-\bottomrule
-\end{tabular}
-\end{table}
-\vspace{0.15cm}
-\begin{block}{Interpretation}
-The largest difference appears on GSM-HARD: when numbers become large, \CoT{} accuracy drops sharply, while \PAL{} remains much more stable because Python performs the arithmetic.
-\end{block}
-\source{PAL paper, Table 1 and Section 5.1.}
-\end{frame}
-
-% ---------------------------------------------------------
-\begin{frame}{Symbolic and algorithmic results}
-\small
-\begin{table}
-\begin{tabular}{@{}lccccc@{}}
-\toprule
-\textbf{Method} & \textbf{Colored} & \textbf{Penguins} & \textbf{Date} & \textbf{Repeat} & \textbf{Objects} \\
- & \textbf{Objects} & & & \textbf{Copy} & \textbf{Counting} \\
-\midrule
-\Direct{} Codex & 75.7 & 71.1 & 49.9 & 81.3 & 37.6 \\
-\CoT{} Codex & 86.3 & 79.2 & 64.8 & 68.8 & 73.0 \\
-\textbf{\PAL{} Codex} & \textbf{95.1} & \textbf{93.3} & \textbf{76.2} & \textbf{90.6} & \textbf{96.7} \\
-\bottomrule
-\end{tabular}
-\end{table}
-\vspace{0.15cm}
-\begin{block}{Interpretation}
-\PAL{} is not only a calculator trick: it also helps when the task can be expressed as list operations, dictionaries, loops, filtering, or date computations.
-\end{block}
-\source{PAL paper, Table 2 and Section 5.2.}
-\end{frame}
-
-% ---------------------------------------------------------
-\begin{frame}{Robustness result: GSM8K vs. GSM-HARD}
-
-\vspace{0.3cm}
-
-
-\begin{columns}[T,totalwidth=\textwidth]
-      \begin{column}{0.45\textwidth}
-
-        \centering
-          \begin{tikzpicture}[scale=0.8, transform shape, x=1cm,y=0.08cm]
-          \draw[->] (0,0) -- (7.1,0) node[right]{dataset};
-          \draw[->] (0,0) -- (0,82) node[above]{accuracy};
-
-          \foreach \y in {20,40,60,80}
-              \draw (-0.08,\y) -- (0,\y)
-              node[left]{\scriptsize \y};
-
-          \node at (1.2,-7) {\scriptsize GSM8K};
-          \node at (4.7,-7) {\scriptsize GSM-HARD};
-
-          \draw[fill=blue!55] (0.7,0) rectangle (1.2,65.6);
-          \draw[fill=green!60!black] (1.25,0) rectangle (1.75,72.0);
-
-          \draw[fill=blue!55] (4.2,0) rectangle (4.7,23.1);
-          \draw[fill=green!60!black] (4.75,0) rectangle (5.25,61.2);
-
-          \node[blue!55!black] at (6.2,65) {\scriptsize \CoT{}};
-          \node[green!40!black] at (6.2,56) {\scriptsize \PAL{}};
-          \end{tikzpicture}\\
-          \source{PAL paper, Table 1 and Section 5.1.}
-
-      \end{column}
-
-      \begin{column}{0.45\textwidth}
-          \begin{block}{GSM-HARD construction}
-            The authors create a harder variant of GSM8K by replacing numbers in the questions with larger numbers, including values up to seven digits.
-          \end{block}
-          \begin{alertblock}{Observed failure mode}
-            For many examples, \CoT{} produces nearly the same reasoning text for the original and hard versions, suggesting that the main problem is arithmetic execution rather than decomposition.
-          \end{alertblock}
-      \end{column}
-
-	
-      \end{columns}
-
-
-
-
-
-
-
-\end{frame}
-
-% ---------------------------------------------------------
-\begin{frame}{Analysis: what actually makes \PAL{} work?}
-\begin{columns}[T,totalwidth=\textwidth]
-\begin{column}{0.49\textwidth}
-\begin{block}{Interpreter matters}
-When the model generated Python-like code but had to ``execute'' it itself, performance on GSM8K was far below full \PAL{}.
-\end{block}
-\begin{block}{Variable names matter}
-Replacing meaningful variable names with random names reduced accuracy; names help ground program variables to problem entities.
-\end{block}
-\end{column}
-\begin{column}{0.47\textwidth}
-\begin{block}{Not restricted to code-only LMs}
-The paper reports that sufficiently capable natural-language LMs can also benefit from \PAL{}, although weaker models may struggle with code generation.
-\end{block}
-\begin{block}{Runtime errors are rare}
-The generated Python code was syntactically correct, and fewer than 1\% of examples raised runtime exceptions.
-\end{block}
-\end{column}
-\end{columns}
-\source{PAL paper, Section 6.}
-\end{frame}
-
-% =========================================================
-\section{Discussion and Conclusion}
-
-\begin{frame}{Strengths and limitations}
-\begin{columns}[T,totalwidth=\textwidth]
-\begin{column}{0.48\textwidth}
-\begin{exampleblock}{Strengths}
-\begin{itemize}
-  \item Clear neuro-symbolic division of labor.
-  \item Strong gains on math, symbolic, and algorithmic tasks.
-  \item Robustness to larger numbers.
-  \item Simple implementation: prompt + interpreter.
-\end{itemize}
-\end{exampleblock}
-\end{column}
-\begin{column}{0.48\textwidth}
-\begin{alertblock}{Limitations / questions}
-\begin{itemize}
-  \item Correctness still depends on generating the right program.
-  \item Execution safety and sandboxing are not the central focus.
-  \item Some tasks may not map cleanly to Python programs.
-  \item Evaluation is based on few-shot prompting with specific model families.
-\end{itemize}
-\end{alertblock}
-\end{column}
-\end{columns}
-\end{frame}
-
-% ---------------------------------------------------------
-\begin{frame}{Open questions for the preliminary discussion}
-\begin{enumerate}
-  \item Should the final presentation emphasize \textbf{neuro-symbolic AI} more strongly, or stay closer to the prompting-method perspective?
-  \item Should I include a small live/demo example from my repository, or keep the seminar presentation fully paper-focused?
-  \item Which limitations are most relevant for the seminar: code execution safety, benchmark scope, or generalization beyond Python-solvable tasks?
-\end{enumerate}
-\end{frame}
-
-% ---------------------------------------------------------
-\begin{frame}{Conclusion}
-\begin{block}{Takeaway}
-\PAL{} improves reasoning by making the LLM generate executable intermediate steps and delegating exact computation to a symbolic runtime.
-\end{block}
-\vspace{0.25cm}
-\begin{itemize}
-  \item It keeps the strength of LLMs: natural-language understanding and decomposition.
-  \item It avoids a key weakness of LLMs: unreliable arithmetic and step execution.
-  \item It provides a simple but powerful neuro-symbolic pattern: \textbf{language model as planner, interpreter as executor}.
-\end{itemize}
-\source{PAL paper, Conclusion.}
-\end{frame}
-
-% ---------------------------------------------------------
-\begin{frame}
-\centering
-\Huge Thank you!
-\vspace{0.4cm}
-
-\Large Questions and feedback
-\end{frame}
-
+\input{01/title_page.tex}
+\input{02/talk_structure_and_timing.tex}
+\input{03/motivation_llms_reason_but_they_also_calculate_unreliably.tex}
+\input{04/background_1_few_shot_chain_of_thought_prompting.tex}
+\input{05/background_2_few_shot_chain_of_thought_prompting.tex}
+%\input{04/background_1_few_shot_prompting.tex}
+%\input{05/background_2_chain_of_thought_prompting.tex}
+\input{06/where_chain_of_thought_can_fail.tex}
+\input{07/core_idea_of.tex}
+\input{08/formal_view_of.tex}
+\input{09/example_symbolic_reasoning_with.tex}
+\input{10/example_mathematical_reasoning_with.tex}
+\input{11/experimental_setup.tex}
+\input{12/benchmarks_used_in_the_paper.tex}
+\input{120/OBJECTS_OBJECT_COUNTING.tex}
+\input{13/main_math_results.tex}
+\input{14/symbolic_and_algorithmic_results.tex}
+\input{15/robustness_result_gsm8k_vs_gsm_hard.tex}
+\input{16/analysis_what_actually_makes.tex}
+\input{17/strengths_and_limitations.tex}
+%\input{18/open_questions_for_the_preliminary_discussion.tex}
+\input{19/conclusion.tex}
+\input{20/thank_you.tex}
 \end{document}

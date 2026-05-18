@@ -1,0 +1,29 @@
+\begin{frame}{Core idea of \PAL{}}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.48\textwidth}
+\begin{block}{The key problem}
+  With CoT we can split problems into smaller subproblems correctly.\\
+  \textbf{But} when "thinking" about too many objects or dealing with arithmetically large numbers,
+  the LLM becomes inconsistent:\begin{itemize}
+    \item LLM trades off higher complexity with consistent algorithmic execution 
+    \item LLM performs rather textbased than algorithmic calculations
+    \item good algorithms have never dealt with such kind of problems
+  \end{itemize} 
+\end{block}
+\end{column}
+\begin{column}{0.48\textwidth}
+
+\begin{exampleblock}{Solution}
+  Don't let the model perform calculations or algorithmic steps.\\
+  Let \textbf{only generate the code} which outputs the solution an run with \textbf{Python}.
+  \begin{itemize}
+    \item[\textrightarrow] relieve the model of the expensive work on execution steps
+    \item[\textrightarrow] let this work be done by the interpreter
+  \end{itemize}
+  \underline{Why \textbf{Python}?} It's simple. 
+  No need to expensively deal with pointer, references etc. which are not relevant for the problem we want to solve.
+\end{exampleblock}
+
+\end{column}
+\end{columns}
+\end{frame}

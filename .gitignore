@@ -14,6 +14,11 @@
 
 .env
 
+__pycache__
+.python-version
+Template-Beamer
+
 .vscode
 llama2.c/
 tex/PAL_Zusammenfassung
+cot-unfaithfulness

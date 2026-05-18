@@ -1,0 +1,26 @@
+\begin{frame}{Why Chain-of-Thought is not enough?}
+\small
+
+\begin{block}{CoT improves performance over direct answering. Especially in BBH-benchmarks but...  \dots}
+\begin{itemize}
+    \item biased prompts still influence the LLMs output.
+    \item even with unbiased prompts, the model reaches it's limitations
+    \item problem: the model still has to do two different things at once:
+    \begin{enumerate}
+        \item decompose the problem into useful steps,
+        \item execute these steps correctly.
+    \end{enumerate}
+\end{itemize}
+\end{block}
+
+\vspace{0.1cm}
+
+\begin{alertblock}{Where the limitation appears}
+\begin{itemize}
+    \item At a certain amount of complexity, e.g. number of objects involved into the problem, the precision drops sharply
+    \item When calculating with large numbers the LLM often gets wrong results
+    \item The reasoning trace may look plausible, but the final answer can still be wrong because the model makes arithmetic, logical, or bookkeeping errors.
+\end{itemize}
+\end{alertblock}
+
+\end{frame}

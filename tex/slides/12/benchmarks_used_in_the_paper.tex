@@ -1,0 +1,45 @@
+\begin{frame}{Benchmarks used in the paper}
+\small
+\begin{table}[h]
+\centering
+\begin{tabular}{lll}
+\hline
+\textbf{Category} & \textbf{Benchmark} & \textbf{Measures} \\
+\hline
+Mathematical & GSM8K & Multi-step grade-school math word problems. \\
+ & GSM-HARD & Harder GSM8K-style arithmetic problems. \\
+ & SVAMP & Robustness on varied arithmetic word problems. \\
+ & ASDIV & Diverse arithmetic word-problem solving. \\
+ & SINGLEEQ & Single-equation math word problems. \\
+ & SINGLEOP & Single-operation arithmetic problems. \\
+ & ADDSUB & Addition and subtraction word problems. \\
+ & MULTIARITH & Multi-step arithmetic word problems. \\
+\hline
+Symbolic & COLORED OBJECTS & Reasoning over object-color relations. \\
+ & PENGUINS & Reasoning over table-based attributes. \\
+ & DATE & Reasoning over dates and calendars. \\
+\hline
+Algorithmic & OBJECT COUNTING & Counting specified objects. \\
+ & REPEAT COPY & Following copy/repetition instructions. \\
+\hline
+\end{tabular}
+\caption{Benchmarks used in PAL.}
+\label{tab:reasoning_benchmarks}
+\end{table}
+\begin{table}
+\begin{tabular}{@{}p{0.27\textwidth}p{0.64\textwidth}@{}}
+\toprule
+\textbf{Category} & \textbf{Benchmarks / examples} \\
+\midrule
+Mathematical reasoning & GSM8K, GSM-HARD, SVAMP, ASDIV, SINGLEEQ, SINGLEOP, ADDSUB, MULTIARITH \\
+Symbolic reasoning & COLORED OBJECTS, PENGUINS, DATE from BIG-Bench Hard \\
+Algorithmic tasks & OBJECT COUNTING and REPEAT COPY \\
+\bottomrule
+\end{tabular}
+\end{table}
+\vspace{0.15cm}
+\begin{block}{Presentation focus}
+I will focus on GSM8K/GSM-HARD for arithmetic robustness, and on COLORED OBJECTS/OBJECT COUNTING for symbolic and algorithmic reasoning.
+\end{block}
+\source{PAL paper, Sections 4.1--4.3.}
+\end{frame}

@@ -1,0 +1,35 @@
+\begin{frame}{Experimental setup}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.33\textwidth}
+\begin{block}{Task families}
+\begin{itemize}
+  \item Mathematical word problems
+  \item Symbolic reasoning
+  \item Algorithmic tasks
+\end{itemize}
+\end{block}
+\end{column}
+\begin{column}{0.31\textwidth}
+\begin{block}{Baselines}
+\begin{itemize}
+  \item \Direct{} prompting
+  \item \CoT{} prompting
+  \item \PAL{} prompting
+\end{itemize}
+\end{block}
+\end{column}
+\begin{column}{0.31\textwidth}
+\begin{block}{Main backend}
+\begin{itemize}
+  \item Codex / code-davinci-002
+  \item Greedy decoding, temperature 0
+  \item Accuracy / solve rate
+\end{itemize}
+\end{block}
+\end{column}
+\end{columns}
+\vspace{0.25cm}
+\begin{exampleblock}{Why this setup matters}
+The experiments test whether the gain comes from program-aided execution rather than simply from using a larger language model.
+\end{exampleblock}
+\end{frame}

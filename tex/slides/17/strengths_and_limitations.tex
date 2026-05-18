@@ -1,0 +1,24 @@
+\begin{frame}{Strengths and limitations}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.48\textwidth}
+\begin{exampleblock}{Strengths}
+\begin{itemize}
+  \item Clear neuro-symbolic division of labor.
+  \item Strong gains on math, symbolic, and algorithmic tasks.
+  \item Robustness to larger numbers.
+  \item Simple implementation: prompt + interpreter.
+\end{itemize}
+\end{exampleblock}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{alertblock}{Limitations / questions}
+\begin{itemize}
+  \item Correctness still depends on generating the right program.
+  \item Execution safety and sandboxing are not the central focus.
+  \item Some tasks may not map cleanly to Python programs.
+  \item Evaluation is based on few-shot prompting with specific model families.
+\end{itemize}
+\end{alertblock}
+\end{column}
+\end{columns}
+\end{frame}

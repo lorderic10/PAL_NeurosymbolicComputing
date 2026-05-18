@@ -1,0 +1,26 @@
+\begin{frame}{Background 2: few-shot and chain-of-thought prompting}
+\begin{table}
+\small
+\begin{tabular}{@{}p{0.45\textwidth} | p{0.5\textwidth}@{}}
+\toprule
+\textbf{few-shot} & \textbf{CoT} \\
+\midrule
+\(\mathbf{p} \equiv \langle \mathbf{x}_1 \cdot \mathbf{y}_1 \rangle \concat \langle \mathbf{x}_2 \cdot \mathbf{y}_2 \rangle \concat \dots \concat \langle \mathbf{x}_k \cdot \mathbf{y}_k \rangle\) & \(\mathbf{p} \equiv \langle \mathbf{x}_1 \cdot \mathbf{t}_1 \cdot \mathbf{y}_1 \rangle \concat \langle \mathbf{x}_2 \cdot \mathbf{t}_2 \cdot \mathbf{y}_2 \rangle \concat \dots \concat \langle \mathbf{x}_k \cdot \mathbf{t}_k \cdot \mathbf{y}_k \rangle\)\\
+Then  \[\mathbf{p} \concat \mathbf{x} \underset{\text{LLM}}{\rightarrow} \mathbf{y}\] & Then \[\mathbf{p} \concat \mathbf{x} \underset{\text{LLM}}{\rightarrow} \mathbf{t} \cdot \mathbf{y}\] \\
+\midrule
+\multicolumn{2}{l}{\underline{Example question \(\mathbf{x}_i\)}: } \\
+\multicolumn{2}{l}{Roger has 5 tennis balls. He buys 2 more cans of tennis balls. Each can has 3 tennis balls.} \\
+\multicolumn{2}{l}{How many tennis balls does he have now?} \\
+\midrule
+\underline{Answer \(\mathbf{y}_i\)}: 11 & \underline{Answer \(\mathbf{t}_i \cdot \mathbf{y}_i\)}: Roger started with 5 tennis balls. \\
+ & 2 cans of 3 tennis balls each is 6 tennis balls. \\
+ & 5 + 6 = 11. The answer is 11.
+%\bottomrule
+\end{tabular}
+\end{table}
+Where \(\cdot\) and \(\concat\) are appropriate separators in order to represent \(\left\{(\mathbf{x}_i, \mathbf{y}_i)\right\}_{k\in \mathds{N}}\).\\
+\textrightarrow\ \CoT\ extends \textit{few-shot} by providing an \textbf{additional derivation} \(\mathbf{t}_i\). \\
+Then \(\mathbf{p}\) is a representation of \(\left\{(\mathbf{x}_i, \mathbf{t}_i, \mathbf{y}_i)\right\}_{k\in \mathds{N}}\).
+
+
+\end{frame}

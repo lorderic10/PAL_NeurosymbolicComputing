@@ -1,0 +1,28 @@
+\begin{frame}{What changes?}
+
+\begin{table}
+\small
+\begin{tabular}{@{}p{0.45\textwidth} | p{0.5\textwidth}@{}}
+\toprule
+\textbf{CoT} & \textbf{PAL} \\
+\midrule
+\(\mathbf{p} = \langle \mathbf{x}_1 \cdot \mathbf{t}_1 \cdot \mathbf{y}_1 \rangle \concat \langle \mathbf{x}_2 \cdot \mathbf{t}_2 \cdot \mathbf{y}_2 \rangle \concat \dots \concat \langle \mathbf{x}_k \cdot \mathbf{t}_k \cdot \mathbf{y}_k \rangle\) & \(\mathbf{p} \equiv \langle \mathbf{x}_1 \cdot \mathbf{t}_1 \rangle \concat \langle \mathbf{x}_2 \cdot \mathbf{t}_2 \rangle \concat \dots \concat \langle \mathbf{x}_k \cdot \mathbf{t}_k \rangle\) \\
+Then \[\mathbf{p} \concat \mathbf{x} \underset{\text{LLM}}{\rightarrow} \mathbf{t} \cdot \mathbf{y}\] & Then \[\mathbf{p} \concat \mathbf{x} \underset{\text{LLM}}{\rightarrow} \mathbf{t} \underset{\text{Python}}{\rightarrow} \mathbf{y}\]\\
+\midrule
+\multicolumn{2}{l}{\underline{Example question \(\mathbf{x}_i\)}: } \\
+\multicolumn{2}{l}{Roger has 5 tennis balls. He buys 2 more cans of tennis balls. Each can has 3 tennis balls.} \\
+\multicolumn{2}{l}{How many tennis balls does he have now?} \\
+\midrule
+\underline{Answer \(\mathbf{t}_i \cdot \mathbf{y}_i\)}:  & \underline{Answer \(\mathbf{t}_i\)}: (no \(\mathbf{y}_i\)!)\\
+Roger started with 5 tennis balls. & \texttt{\color{teal} tennis\_balls \color{black} = \color{blue} 5}\\
+2 cans of 3 tennis balls each is 6 tennis balls. & \texttt{\color{teal} bought\_balls \color{black} = \color{blue} 2 \color{black} * \color{blue} 3}\\
+5 + 6 = 11. The answer is 11.  & \texttt{\color{teal} answer \color{black} = \color{teal} tennis\_balls \color{black} + \color{teal} bought\_balls}
+%\bottomrule
+\end{tabular}
+\end{table}
+\begin{block}{Where \(\mathbf{t}_i = [\mathbf{s}_1, \mathbf{s}_2,...,\mathbf{s}_N]\) with \(\mathbf{s}_j \in \textup{NL} \cup \textup{PL}\)}
+  \(\mathbf{s}_j\) is either a comment in natural language (NL) or programming language (PL).
+\end{block}
+
+
+\end{frame}

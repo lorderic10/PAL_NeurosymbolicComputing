@@ -1,0 +1,22 @@
+\begin{frame}{Background 1: few-shot and chain-of-thought prompting}
+\begin{block}{Definition}
+Both techniques provide the LLM a pre-prompt \(\mathbf{p}\) which appended to the question \(\mathbf{x}\) is supposed to achieve a more precise output \(\mathbf{y}\). \\
+In particular \(\mathbf{p}\) provides a representation of \(\mathbf{k}\) question-answer-tuples \(\left\{(\mathbf{x}_i, \mathbf{y}_i)\right\}_{k\in \mathds{N}}\)
+which are supposed to tell the LLM how to derive his solutions.
+\end{block}
+\begin{table}
+\small
+\begin{tabular}{@{}p{0.45\textwidth} | p{0.5\textwidth}@{}}
+\toprule
+\textbf{few-shot} & \textbf{CoT} \\
+\midrule
+\(\mathbf{p} \equiv \langle \mathbf{x}_1 \cdot \mathbf{y}_1 \rangle \concat \langle \mathbf{x}_2 \cdot \mathbf{y}_2 \rangle \concat \dots \concat \langle \mathbf{x}_k \cdot \mathbf{y}_k \rangle\) & \(\mathbf{p} \equiv \langle \mathbf{x}_1 \cdot \mathbf{t}_1 \cdot \mathbf{y}_1 \rangle \concat \langle \mathbf{x}_2 \cdot \mathbf{t}_2 \cdot \mathbf{y}_2 \rangle \concat \dots \concat \langle \mathbf{x}_k \cdot \mathbf{t}_k \cdot \mathbf{y}_k \rangle\)\\
+Then  \[\mathbf{p} \concat \mathbf{x} \underset{\text{LLM}}{\rightarrow} \mathbf{y}\] & Then \[\mathbf{p} \concat \mathbf{x} \underset{\text{LLM}}{\rightarrow} \mathbf{t} \cdot \mathbf{y}\] 
+%\bottomrule
+\end{tabular}
+\end{table}
+Where \(\cdot\) and \(\concat\) are appropriate separators in order to represent \(\left\{(\mathbf{x}_i, \mathbf{y}_i)\right\}_{k\in \mathds{N}}\).\\
+\textrightarrow\ \CoT\ extends \textit{few-shot} by providing an \textbf{additional derivation} \(\mathbf{t}_i\). \\
+Then \(\mathbf{p}\) is a representation of \(\left\{(\mathbf{x}_i, \mathbf{t}_i, \mathbf{y}_i)\right\}_{k\in \mathds{N}}\).
+
+\end{frame}

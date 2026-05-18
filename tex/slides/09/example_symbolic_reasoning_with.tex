@@ -1,0 +1,28 @@
+\begin{frame}[fragile]{Example of \(\langle \mathbf{x}_i \cdot \mathbf{t}_i \rangle\): symbolic reasoning with \PAL{}}
+    \underline{If \(\mathbf{x}_i =\)}\\
+    On the table, you see a bunch of objects arranged in a row:
+    \begin{center}
+        \begin{tabular}{lll}
+            \hspace{.38cm}a purple \setulcolor{purple} \ul{paperclip} & \textrightarrow a pink \setulcolor{pink} \ul{stress ball} & \textrightarrow a brown \setulcolor{brown} \ul{keychain} \\
+            \textrightarrow a green \setulcolor{green} \ul{phone charger} & \textrightarrow a mauve \setulcolor{Thistle} \ul{fidget spinner} & \textrightarrow a burgundy \setulcolor{BrickRed} \ul{pen} \\
+        \end{tabular}
+    \end{center}
+    What is the color of the object directly to the right of the stress ball?\\
+    \underline{Then \(\mathbf{t}_i = \)}
+    \begin{lstlisting}[style=pythonstyle]
+# Put objects into a list to record ordering -> NL
+objects = [('paperclip', 'purple'), ('stress ball', 'pink'), ('keychain', 'brown'),           ('scrunchiephone charger', 'green'), ('fidget spinner', 'mauve'), ('pen', 'burgundy')]
+# Find the index of the stress ball -> NL
+stress_ball_idx = None
+for i, obj in enumerate(objects):
+    if obj[0] == 'stress ball':
+        stress_ball_idx = i
+        break
+# Find the directly right object -> NL (omit index check here)
+direct_right = objects[stress_ball_idx + 1]
+# Get the directly right object's color -> NL
+answer = direct_right[1]
+\end{lstlisting}
+
+
+\end{frame}
