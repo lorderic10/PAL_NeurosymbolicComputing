@@ -1,0 +1,39 @@
+\begin{frame}{Core idea of \PAL{}}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.48\textwidth}
+\begin{block}{The key problem}
+    \vspace{1.6cm}
+  \begin{center}
+  \begin{tikzpicture}[node distance=0.28cm, every node/.style={font=\scriptsize}]
+\node[draw,rounded corners,fill=blue!8,minimum width=3.6cm,align=center] (q) {Natural-language\ problem};
+\node[draw,rounded corners,fill=blue!8,below=of q,minimum width=3.6cm,align=center] (steps) {Reasoning steps};
+\node[draw,rounded corners,fill=red!40,below=of steps,minimum width=3.6cm,align=center] (calc) {LLM executes\ calculation};
+\node[draw,rounded corners,fill=red!40,below=of calc,minimum width=3.6cm,align=center] (ans) {Final answer};
+\draw[-{Latex}] (q) -- (steps);
+\draw[-{Latex}] (steps) -- (calc);
+\draw[-{Latex}] (calc) -- (ans);
+\end{tikzpicture}
+\end{center}
+\vspace{1.6cm}
+\end{block}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{exampleblock}{Solution}
+    \vspace{1.6cm}
+  \begin{center}
+  \begin{tikzpicture}[node distance=0.28cm, every node/.style={font=\scriptsize}]
+\node[draw,rounded corners,fill=blue!8,minimum width=3.6cm,align=center] (q) {Natural-language\ problem};
+\node[draw,rounded corners,fill=blue!8,below=of q,minimum width=3.6cm,align=center] (steps) {LLM generates programmatic steps};
+\node[draw,rounded corners,fill=green!40,below=of steps,minimum width=3.6cm,align=center] (calc) {Python interpreter executes};
+\node[draw,rounded corners,fill=green!40,below=of calc,minimum width=3.6cm,align=center] (ans) {Final answer};
+\draw[-{Latex}] (q) -- (steps);
+\draw[-{Latex}] (steps) -- (calc);
+\draw[-{Latex}] (calc) -- (ans);
+\end{tikzpicture}
+\end{center}
+    \vspace{1.6cm}
+\end{exampleblock}
+    
+\end{column}
+\end{columns}
+\end{frame}

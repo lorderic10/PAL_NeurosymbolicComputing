@@ -5,11 +5,6 @@
 Large language models can often translate a natural-language problem into useful intermediate steps, but may still make arithmetic or logical execution mistakes.
 \end{block}
 \vspace{0.15cm}
-\begin{itemize}
-  \item Few-shot prompting shows examples at test time.
-  \item Chain-of-thought prompting asks the model to write intermediate reasoning steps.
-  \item But in \CoT{}, the same model both \emph{plans} and \emph{executes} the solution.
-\end{itemize}
 \end{column}
 \begin{column}{0.42\textwidth}
 \begin{alertblock}{Problem}
@@ -17,16 +12,20 @@ Even if the decomposition is plausible, the final answer can be wrong because th
 \end{alertblock}
 \vspace{0.1cm}
 \centering
-\begin{tikzpicture}[node distance=0.28cm, every node/.style={font=\scriptsize}]
+
+\end{column}
+\end{columns}
+
+\begin{center}
+  \begin{tikzpicture}[node distance=0.28cm, every node/.style={font=\scriptsize}]
 \node[draw,rounded corners,fill=blue!8,minimum width=3.6cm,align=center] (q) {Natural-language\ problem};
 \node[draw,rounded corners,fill=blue!8,below=of q,minimum width=3.6cm,align=center] (steps) {Reasoning steps};
-\node[draw,rounded corners,fill=red!10,below=of steps,minimum width=3.6cm,align=center] (calc) {LLM executes\ calculation};
-\node[draw,rounded corners,fill=red!10,below=of calc,minimum width=3.6cm,align=center] (ans) {Final answer};
+\node[draw,rounded corners,fill=red!40,below=of steps,minimum width=3.6cm,align=center] (calc) {LLM executes\ calculation};
+\node[draw,rounded corners,fill=red!40,below=of calc,minimum width=3.6cm,align=center] (ans) {Final answer};
 \draw[-{Latex}] (q) -- (steps);
 \draw[-{Latex}] (steps) -- (calc);
 \draw[-{Latex}] (calc) -- (ans);
 \end{tikzpicture}
-\end{column}
-\end{columns}
+\end{center}
 % \source{PAL paper, Abstract and Introduction.}
 \end{frame}

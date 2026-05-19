@@ -1,11 +1,13 @@
 \begin{frame}{Why Chain-of-Thought is not enough?}
 \small
 
-\begin{block}{CoT improves performance over direct answering. Especially in BBH-benchmarks but...  \dots}
-\begin{itemize}
-    \item biased prompts still influence the LLMs output.
-    \item even with unbiased prompts, the model reaches it's limitations
-    \item problem: the model still has to do two different things at once:
+
+
+\begin{block}{CoT improves performance over direct answering. But \dots}
+    \begin{itemize}
+    \item biased prompts still influence the LLMs output. Up to 36\% precision loss.
+    \item even with unbiased prompts, the model reaches it's limitations.
+    \item problem: Especially in BBH-Benchmarks, the model still must do two things at once:
     \begin{enumerate}
         \item decompose the problem into useful steps,
         \item execute these steps correctly.
@@ -13,14 +15,47 @@
 \end{itemize}
 \end{block}
 
-\vspace{0.1cm}
+\small
 
-\begin{alertblock}{Where the limitation appears}
-\begin{itemize}
-    \item At a certain amount of complexity, e.g. number of objects involved into the problem, the precision drops sharply
-    \item When calculating with large numbers the LLM often gets wrong results
-    \item The reasoning trace may look plausible, but the final answer can still be wrong because the model makes arithmetic, logical, or bookkeeping errors.
-\end{itemize}
-\end{alertblock}
+\begin{columns}[T]
+\setbeamercolor{block title}{fg=black,bg=blue!20}
+% =====================================================
+\begin{column}{0.48\textwidth}
+
+\begin{block}{Input}
+
+\textbf{Q:} The bakers at the Beverly Hills Bakery baked (\small\textbf{+})200 loaves of bread on Monday morning. They sold (\small\textbf{-})93 loaves in the morning and (\small\textbf{-})39 loaves in the afternoon. A grocery store returned (\small\textbf{+})6 unsold loaves. How many loaves of bread did they have left?
+
+\end{block}
+
+\end{column}
+
+% =====================================================
+\begin{column}{0.48\textwidth}
+\setbeamercolor{block title}{fg=black,bg=green!20}
+\begin{block}{\CoT{} Output}
+
+\textbf{A:}
+The bakers started with 200 loaves. They sold 93 in the morning and 39 in the afternoon. So they sold \(93 + 39 = 132\) loaves. The grocery store returned 6 loaves. So they had \(200 - 132 - 6 = 62\) loaves left.
+\[
+    \text{{\color{red}$\times$} \underline{Wrong}! }\ 200 - (93 + 39) + 6 = 74 
+\] 
+
+\end{block}
+
+\end{column}
+
+% =====================================================
+\end{columns}
+
+
+
+%\begin{alertblock}{Where the limitation appears}
+%\begin{itemize}
+%    \item At a certain amount of complexity, e.g. number of objects involved into the problem, the precision drops sharply
+%    \item When calculating with large numbers the LLM often gets wrong results
+%    \item The reasoning trace may look plausible, but the final answer can still be wrong because the model makes arithmetic, logical, or bookkeeping errors.
+%\end{itemize}
+%\end{alertblock}
 
 \end{frame}

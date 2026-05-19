@@ -1,5 +1,4 @@
-TEX=pdflatex
--shell-escape
+TEX=pdflatex --shell-escape
 VIEWER=open
 MAIN_FILE=slides
 .PHONY: all clean

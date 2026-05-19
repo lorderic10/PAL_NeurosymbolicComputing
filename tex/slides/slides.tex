@@ -13,12 +13,14 @@
 \usepackage{wrapfig}
 \usepackage{listings}
 \usepackage{tikz}
+\usepackage{pgfplots}
 \usepackage{fancybox}
 \usepackage{color}
 \usepackage{beamerthemesplit}
 \usepackage{multirow}
 \usepackage{soul}
 \usetikzlibrary{arrows.meta,positioning,fit,shapes.geometric}
+\pgfplotsset{compat=1.18}
 
 % ---------- Theme ----------
 \usetheme[compress]{Heidelberg}
@@ -36,50 +38,101 @@
 \newcommand{\concat}{\mathbin{\|}}
 \newcommand{\source}[1]{\vspace{0.15cm}{\scriptsize\color{gray}Source: #1}}
 
+\usepackage{listings}
+\usepackage{xcolor}
+
 \lstdefinestyle{pythonstyle}{
   language=Python,
   basicstyle=\ttfamily\scriptsize,
-  keywordstyle=\color{blue!70!black},
-  commentstyle=\color{green!40!black},
-  stringstyle=\color{orange!80!black},
   showstringspaces=false,
   frame=single,
   framerule=0.2pt,
   breaklines=true,
   columns=fullflexible,
-  keepspaces=true
+  keepspaces=true,
+  keywordstyle=\color{purple!80!black}\bfseries,
+  morekeywords=[1]{
+    for,
+    in,
+    enumerate,
+    if,
+    break,
+    None
+  },
+  keywordstyle=[1]\color{purple!80!black}\bfseries,
+  morekeywords=[2]{
+    stress_ball_idx,
+    object,
+    direct_right,
+    money_initial,
+    bagels,
+    bagel_cost,
+    money_spent,
+    money_left
+  },
+  keywordstyle=[2]\color{blue!80!black},
+  morekeywords=[3]{
+    answer
+  },
+  keywordstyle=[3]\color{red!80!black}\bfseries,
+  commentstyle=\color{green!40!black},
+  stringstyle=\color{orange!80!black}
 }
-
 % ---------- Title ----------
 \title[Program-aided Language Models]{PAL: Program-aided Language Models}
 \subtitle{How to connect the weaknesses of LLMs in performing algorithmic executions}
-\author{Eric Peter}
-\institute{Heidelberg University}
+\author[Eric Peter]{Eric Peter}
+\institute[Uni HD]{Heidelberg University}
 \date{21. May 2026}
+
+%---------------------------------------%
+%---------- RECURRING OUTLINE ----------%
+% Show a compact outline before each top-level section.
+\AtBeginSection[]
+{
+\begin{frame}<beamer>
+\frametitle{Outline}
+\tableofcontents[currentsection,hideallsubsections]
+\end{frame}
+}
+%----------------------------------------
 
 \begin{document}
 
 % =========================================================
+\frame[plain]{\titlepage}
+%\input{01/title_page.tex}
 
-\input{01/title_page.tex}
+\section[Overview]{Overview}
 \input{02/talk_structure_and_timing.tex}
+
+\section[Motivation]{Motivation and Background}
 \input{03/motivation_llms_reason_but_they_also_calculate_unreliably.tex}
 \input{04/background_1_few_shot_chain_of_thought_prompting.tex}
 \input{05/background_2_few_shot_chain_of_thought_prompting.tex}
-%\input{04/background_1_few_shot_prompting.tex}
-%\input{05/background_2_chain_of_thought_prompting.tex}
 \input{06/where_chain_of_thought_can_fail.tex}
+
+\section[PAL]{Core Idea of PAL}
 \input{07/core_idea_of.tex}
+\input{070/core_idea_of_2.tex}
 \input{08/formal_view_of.tex}
 \input{09/example_symbolic_reasoning_with.tex}
 \input{10/example_mathematical_reasoning_with.tex}
+
+\section[Experiments]{Experimental Setup}
 \input{11/experimental_setup.tex}
 \input{12/benchmarks_used_in_the_paper.tex}
+
+\section[Results]{Results and Analysis}
 \input{120/OBJECTS_OBJECT_COUNTING.tex}
 \input{13/main_math_results.tex}
 \input{14/symbolic_and_algorithmic_results.tex}
+\input{140/number_of_objects.tex}
 \input{15/robustness_result_gsm8k_vs_gsm_hard.tex}
+\input{150/model_comparisson.tex}
 \input{16/analysis_what_actually_makes.tex}
+
+\section[Discussion]{Discussion and Conclusion}
 \input{17/strengths_and_limitations.tex}
 %\input{18/open_questions_for_the_preliminary_discussion.tex}
 \input{19/conclusion.tex}
